@@ -50,9 +50,14 @@ where departments.department_id=employees.department_id
 
 - ## **查询部门表，统计每个部门的销售总金额。**  
 ```aidl
-select a.department_name,(select sum(c.Trade_Receivable)from orders c  where c.employee_id=d.employee_id group by c.employee_id)as "销售总额"
-from departments a,employees b,orders d
+select department_name ,sum(all_money) as "部门总销售额"
+from(
+select sum(c.Trade_Receivable) as all_money,c.employee_id,b.department_id,a.department_name
+from departments a,employees b,orders c 
 where a.department_id=b.department_id
-and d.employee_id=b.employee_id
+and b.employee_id=c.employee_id
+group by c.employee_id,b.department_id,a.department_name
+)
+group by department_id,department_name
 ```  
-![](all_money.png)
+![](all_moneys.png)
